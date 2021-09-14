@@ -60,7 +60,6 @@ class ShaderProgram {
     this.unifColor      = gl.getUniformLocation(this.prog, "u_Color");
     this.unifSecondaryColor      = gl.getUniformLocation(this.prog, "u_SecondaryColor");
     this.unifNumericalNorm      = gl.getUniformLocation(this.prog, "u_NumericalNorm");
-
     this.unifTime      = gl.getUniformLocation(this.prog, "u_Time");
     this.unifMousePos      = gl.getUniformLocation(this.prog, "u_MousePos");
     this.unifCamPos      = gl.getUniformLocation(this.prog, "u_CameraPos");
