@@ -1,4 +1,4 @@
-import {vec4, mat4} from 'gl-matrix';
+import {vec2, vec4, mat4} from 'gl-matrix';
 import Drawable from './Drawable';
 import {gl} from '../../globals';
 
@@ -28,7 +28,16 @@ class ShaderProgram {
   unifModel: WebGLUniformLocation;
   unifModelInvTr: WebGLUniformLocation;
   unifViewProj: WebGLUniformLocation;
+  unifViewProjInv: WebGLUniformLocation;
+
   unifColor: WebGLUniformLocation;
+  unifSecondaryColor: WebGLUniformLocation;
+
+  unifNumericalNorm: WebGLUniformLocation;
+
+  unifTime: WebGLUniformLocation;
+  unifMousePos: WebGLUniformLocation;
+  unifCamPos: WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -47,7 +56,15 @@ class ShaderProgram {
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
     this.unifViewProj   = gl.getUniformLocation(this.prog, "u_ViewProj");
+    this.unifViewProjInv   = gl.getUniformLocation(this.prog, "u_ViewProjInv");
     this.unifColor      = gl.getUniformLocation(this.prog, "u_Color");
+    this.unifSecondaryColor      = gl.getUniformLocation(this.prog, "u_SecondaryColor");
+    this.unifNumericalNorm      = gl.getUniformLocation(this.prog, "u_NumericalNorm");
+
+    this.unifTime      = gl.getUniformLocation(this.prog, "u_Time");
+    this.unifMousePos      = gl.getUniformLocation(this.prog, "u_MousePos");
+    this.unifCamPos      = gl.getUniformLocation(this.prog, "u_CameraPos");
+
   }
 
   use() {
@@ -74,7 +91,18 @@ class ShaderProgram {
   setViewProjMatrix(vp: mat4) {
     this.use();
     if (this.unifViewProj !== -1) {
+      let viewprojinv: mat4 = mat4.create();
+      mat4.invert(viewprojinv, vp);
+
       gl.uniformMatrix4fv(this.unifViewProj, false, vp);
+      gl.uniformMatrix4fv(this.unifViewProjInv, false, viewprojinv);
+    }
+  }
+
+  setInverseViewProjMatrix(vp: mat4) {
+    this.use();
+    if (this.unifViewProj !== -1) {
+      gl.uniformMatrix4fv(this.unifViewProjInv, false, vp);
     }
   }
 
@@ -82,6 +110,43 @@ class ShaderProgram {
     this.use();
     if (this.unifColor !== -1) {
       gl.uniform4fv(this.unifColor, color);
+    }
+  }
+
+  setSecondaryColor(color: vec4) {
+    this.use();
+    if (this.unifSecondaryColor !== -1) {
+      gl.uniform4fv(this.unifSecondaryColor, color);
+    }
+  }
+
+  setNumericalNorm(n: boolean) {
+    this.use();
+    if (this.unifSecondaryColor !== -1) {
+      gl.uniform1i(this.unifNumericalNorm, Number(n));
+    }
+  }
+
+
+
+  setTime(time: number) {
+    this.use();
+    if (this.unifColor !== -1) {
+      gl.uniform1f(this.unifTime, time);
+    }
+  }
+
+  setMousePos(pos: vec2) {
+    this.use();
+    if (this.unifColor !== -1) {
+      gl.uniform2fv(this.unifMousePos, pos);
+    }
+  }
+
+  setCamPos(pos: vec4) {
+    this.use();
+    if (this.unifColor !== -1) {
+      gl.uniform4fv(this.unifCamPos, pos);
     }
   }
 
