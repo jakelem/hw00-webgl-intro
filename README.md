@@ -8,7 +8,7 @@ Live demo: https://jakelem.github.io/hw00-webgl-intro
 <p align= "center">
 
 
-For this project, I made a jiggly tofu. The cube vertices move along a sine wave, whose direction and amplitude are determined by the position of the mouse on the screen. The normals are offset based on a 3D Perlin noise derivative, as described by IQ [in this article](https://www.iquilezles.org/www/articles/morenoise/morenoise.htm). The tofu albedo is made of two interpolated colors based on 3D Perlin noise. Finally, 3D Perlin noise is also used as a specular map on the tofu.
+For this project, I made a jiggly tofu. The cube vertices move along a sine wave, whose direction and amplitude are determined by the position of the mouse on the screen. The normals are offset based on a 3D FBM derivative, as described by IQ [in this article](https://www.iquilezles.org/www/articles/morenoise/morenoise.htm). FBM is also used to interpolate colors for the tofu albedo and also as a specular map. 
 
 
 ## Objective
