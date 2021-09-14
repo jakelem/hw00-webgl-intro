@@ -54,8 +54,7 @@ function main() {
   gui.add(controls, 'tesselations', 0, 8).step(1);
   gui.addColor(controls, 'Color');
   gui.addColor(controls, 'Secondary Color');
-  gui.add(controls, 'Use Numerical Normals', true);
-
+  //gui.add(controls, 'Use Numerical Normals', true);
   gui.add(controls, 'Load Scene');
 
   // get canvas and webgl context
