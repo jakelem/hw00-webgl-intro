@@ -24,6 +24,7 @@ in vec4 fs_LightVec;
 in vec4 fs_Col;
 in vec4 fs_WorldPos;
 in vec4 fs_LightPos;
+in vec4 fs_Pos;
 
 uniform vec2 u_MousePos;
 
@@ -100,41 +101,33 @@ void main()
     // Material base color (before shading)
         vec4 diffuseColor = u_SecondaryColor;
         vec3 offset = vec3(20.f); //sin(u_Time * 0.002) * (1.f + 3.f * fs_Nor.xyz);
-        vec4 fbm = fbm3(fs_WorldPos.xyz, 6, 0.8f, 2.0f, 0.8f, 2.f);
-    vec4 fbm_spec = fbm3(fs_WorldPos.xyz + offset, 6, 0.8f, 4.5f, 0.8f, 1.6f);
-    fbm_spec.x = getBias(fbm_spec.x * 0.5f + 0.5f, 0.3f) * 0.9f;
-        vec4 norm = normalize(vec4(fbm.yzw, 0.f));
+        vec4 fbm_col = fbm3(fs_Pos.xyz, 4, 0.8f, 1.6f, 0.8f, 2.f);
+        vec4 fbm_norm = fbm3(fs_Pos.xyz, 6, 0.8f, 2.0f, 0.8f, 2.f);
+        vec4 fbm_spec = fbm3(fs_Pos.xyz + offset, 6, 0.8f, 4.5f, 0.8f, 1.6f);
     
+        fbm_spec.x = getBias(fbm_spec.x * 0.5f + 0.5f, 0.3f) * 1.4f + 0.2f;
+        fbm_spec.x =clamp(fbm_spec.x, 0.f, 4.f);
+    
+        vec4 norm = normalize(vec4(fbm_norm.yzw, 0.f));
         float light_dist = distance(fs_LightPos, fs_WorldPos);
-        float pointlightIntensity = 10.0f / (light_dist * light_dist);
-        //float bias_fbm = getBias(fbm.x, 0.4);
-        
-        float bias_fbm = 0.f;
-        if(fbm.x > 0.45)
-            bias_fbm = fbm.x;
-        norm = normalize(mix(fs_Nor, norm, bias_fbm));
-        //norm = normalize(fs_Nor * norm);
-        
-//        if (u_NumericalNorm == 0)
-//            norm = fs_Nor * (1.f + fbm.x * 0.07);
-        diffuseColor.xyz = mix(u_SecondaryColor.xyz, u_Color.xyz, clamp((fbm.x + 1.0) * 0.5, 0.0, 1.f));
-    //diffuseColor.xyz = vec3(fbm_spec.x);
-        // Calculate the diffuse term for Lambert shading
-        float diffuseTerm = pointlightIntensity * dot(normalize(norm), normalize(fs_LightVec));
+        float pointlightIntensity = 23.f / (light_dist * light_dist);
+        float fbm_lerp = 0.04f;
+        if(fbm_norm.x > 0.45)
+            fbm_lerp = fbm_norm.x;
+        norm = normalize(mix(fs_Nor, norm, fbm_lerp));
+    
+        vec4 lightVec = normalize(fs_LightPos - fs_WorldPos);
+        diffuseColor.xyz = mix(u_SecondaryColor.xyz, u_Color.xyz, clamp((fbm_col.x + 1.0) * 0.5, 0.0, 1.f));
+        float diffuseTerm = pointlightIntensity * dot(normalize(norm), normalize(lightVec));
         // Avoid negative lighting values
          diffuseTerm = clamp(diffuseTerm, 0.f, 1.f);
         float ambientTerm = 0.7;
-        vec4 h = normalize(fs_WorldPos - u_CameraPos);
-
-        float specularIntensity = pointlightIntensity * max(pow(dot(h, norm), 200.f), 0.f);
+        vec4 viewVec = normalize(fs_WorldPos - u_CameraPos);
+        vec4 h = normalize(lightVec - viewVec);
+        float specularIntensity = pointlightIntensity * max(pow(max(dot(h, norm), 0.f), 1024.f), 0.f);
         
-        float lightIntensity = clamp((diffuseTerm + ambientTerm + specularIntensity * fbm_spec.x), 0.f, 3.f);   //Add a small float value to the color multiplier
-                                                            //to simulate ambient lighting. This ensures that faces that are not
-                                                            //lit by our point light are not completely black.
-
-	float f = u_Time;
-        // Compute final shaded color
-    out_Col = vec4(diffuseColor.xyz * lightIntensity, diffuseColor.a);
-        //out_Col = vec4(u_MousePos, 0.f,1.f);
+        float lightIntensity = clamp((diffuseTerm + ambientTerm + specularIntensity * fbm_spec.x), 0.f, 3.f);
+        vec4 lightColor = vec4(255.f, 245.f, 228.f, 255.f) / 255.f;
+        out_Col = vec4(diffuseColor.xyz * lightIntensity * lightColor.xyz, diffuseColor.a);
 
 }

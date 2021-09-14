@@ -5,6 +5,17 @@
 </p>
 <p align="center">(source: Ken Perlin)</p>
 
+Live demo: https://jakelem.github.io/hw00-webgl-intro
+
+<p align="center">
+<img src="images/tofu.gif" alt="drawing" width="350"/>
+</p>
+<p align= "center">
+
+
+For this project, I made a jiggly tofu. The cube vertices move along a sine wave, whose direction and amplitude are determined by the position of the mouse on the screen. The normals are offset based on a 3D Perlin noise derivative, as described by IQ [in this article](https://www.iquilezles.org/www/articles/morenoise/morenoise.htm). The tofu albedo is made of two interpolated colors based on 3D Perlin noise. Finally, 3D Perlin noise is also used as a specular map on the tofu.
+
+
 ## Objective
 - Check that the tools and build configuration we will be using for the class works.
 - Start learning Typescript and WebGL2
