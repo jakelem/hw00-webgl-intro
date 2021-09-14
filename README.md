@@ -1,14 +1,9 @@
 # HW 0: Noisy Planet Part 1 (Intro to Javascript and WebGL)
 
-<p align="center">
-  <img width="360" height="360" src="https://user-images.githubusercontent.com/1758825/132532354-e3a45402-e484-499e-bfa7-2d73b9f2c946.png">
-</p>
-<p align="center">(source: Ken Perlin)</p>
-
 Live demo: https://jakelem.github.io/hw00-webgl-intro
 
 <p align="center">
-<img src="images/tofu.gif" alt="drawing" width="350"/>
+<img src="Images/tofu.gif" alt="drawing" width="350"/>
 </p>
 <p align= "center">
 
