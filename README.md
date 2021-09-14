@@ -3,7 +3,7 @@
 Live demo: https://jakelem.github.io/hw00-webgl-intro
 
 <p align="center">
-<img src="Images/tofu.gif" alt="drawing" width="350"/>
+<img src="Images/tofugif.gif" alt="drawing" width="350"/>
 </p>
 <p align= "center">
 
